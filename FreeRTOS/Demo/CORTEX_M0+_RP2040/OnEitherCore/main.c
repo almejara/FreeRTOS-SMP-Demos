@@ -6,6 +6,7 @@
 #include "semphr.h"   /* Semaphore related API prototypes. */
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/cyw43_arch.h"
 #include "pico/multicore.h"
 
 #ifndef mainRUN_FREE_RTOS_ON_CORE
@@ -361,6 +362,7 @@ void vApplicationTickHook( void )
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     static uint32_t ulCount = 0;
+    static int led_on = true;
 
     /* The RTOS tick hook function is enabled by setting configUSE_TICK_HOOK to
     1 in FreeRTOSConfig.h.
@@ -379,7 +381,9 @@ void vApplicationTickHook( void )
         NOTE: A semaphore is used for example purposes.  In a real application it
         might be preferable to use a direct to task notification,
         which will be faster and use less RAM. */
-        gpio_xor_mask(1u << PICO_DEFAULT_LED_PIN);
+        led_on = !led_on;
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
+        //gpio_xor_mask(1u << PICO_DEFAULT_LED_PIN);
         xSemaphoreGiveFromISR( xEventSemaphore, &xHigherPriorityTaskWoken );
         ulCount = 0UL;
     }
@@ -451,7 +455,11 @@ static void prvSetupHardware( void )
 {
     /* Want to be able to printf */
     stdio_init_all();
+    if (cyw43_arch_init()) {
+        printf("WiFi init failed");
+        return -1;
+    }
     /* And flash LED */
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+   // gpio_init(PICO_DEFAULT_LED_PIN);
+   // gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
 }

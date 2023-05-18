@@ -45,7 +45,11 @@ target_include_directories(main_full PRIVATE
 target_compile_definitions(main_full PRIVATE
         PICO_STDIO_STACK_BUFFER_SIZE=64 # use a small printf on stack buffer
 )
-target_link_libraries(main_full pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4)
+target_link_libraries(main_full 
+        pico_stdlib 
+        pico_cyw43_arch_none  # we need Wifi to access the GPIO, but we don't need anything else
+        FreeRTOS-Kernel 
+        FreeRTOS-Kernel-Heap4)
 pico_add_extra_outputs(main_full)
 
 add_executable(main_blinky
@@ -61,5 +65,9 @@ target_include_directories(main_blinky PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/../../Common/include)
 
-target_link_libraries(main_blinky pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap1)
+target_link_libraries(main_blinky 
+        pico_stdlib 
+        pico_cyw43_arch_none  # we need Wifi to access the GPIO, but we don't need anything else
+        FreeRTOS-Kernel 
+        FreeRTOS-Kernel-Heap1)
 pico_add_extra_outputs(main_blinky)

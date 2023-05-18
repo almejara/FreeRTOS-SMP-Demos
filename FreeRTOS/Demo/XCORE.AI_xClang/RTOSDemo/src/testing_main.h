@@ -4,7 +4,7 @@
 #define TESTING_MAIN_H_
 
 /* Controls whether to create blinky demo or the full demo. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  1
 
 #define testingmainNUM_TILES				2
 #define testingmainENABLE_XC_TASKS			1

@@ -59,9 +59,12 @@
 /* Library includes. */
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/cyw43_arch.h"
+
 #if ( mainRUN_ON_CORE == 1 )
 #include "pico/multicore.h"
 #endif
+
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
@@ -139,9 +142,13 @@ int main( void )
 static void prvSetupHardware( void )
 {
     stdio_init_all();
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, 1);
-    gpio_put(PICO_DEFAULT_LED_PIN, !PICO_DEFAULT_LED_PIN_INVERTED);
+    if (cyw43_arch_init()) {
+        printf("WiFi init failed");
+        return -1;
+    }
+   // gpio_init(PICO_DEFAULT_LED_PIN);
+   // gpio_set_dir(PICO_DEFAULT_LED_PIN, 1);
+    //gpio_put(PICO_DEFAULT_LED_PIN, !PICO_DEFAULT_LED_PIN_INVERTED);
 }
 /*-----------------------------------------------------------*/
 

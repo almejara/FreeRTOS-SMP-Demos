@@ -70,6 +70,7 @@
 /* Library includes. */
 #include <stdio.h>
 #include "hardware/gpio.h"
+#include "pico/cyw43_arch.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -85,7 +86,7 @@ the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
 /* The LED toggled by the Rx task. */
-#define mainTASK_LED						( PICO_DEFAULT_LED_PIN )
+//#define mainTASK_LED						( PICO_DEFAULT_LED_PIN )
 
 /*-----------------------------------------------------------*/
 
@@ -171,6 +172,7 @@ static void prvQueueReceiveTask( void *pvParameters )
 {
 unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
+int led_on = true;
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -186,7 +188,9 @@ const unsigned long ulExpectedValue = 100UL;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			gpio_xor_mask( 1u << mainTASK_LED );
+			led_on = !led_on;
+            cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
+			//gpio_xor_mask( 1u << mainTASK_LED );
 			ulReceivedValue = 0U;
 		}
 	}

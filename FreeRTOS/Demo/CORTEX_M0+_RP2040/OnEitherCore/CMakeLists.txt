@@ -21,6 +21,7 @@ target_link_libraries(on_either_core_common INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap1
         pico_stdlib
+        pico_cyw43_arch_none  # we need Wifi to access the GPIO, but we don't need anything else
         pico_multicore)
 
 add_executable(on_core_zero)
